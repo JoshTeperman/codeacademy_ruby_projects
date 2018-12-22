@@ -1,98 +1,109 @@
-module Menu
-	
-	def outro 
-		@outro
-	end
-	@outro = "Thanks for using Todo List. See you next time!"
-
-	def menu
-		"Welcome User!
-
-		MENU
-		1)Add
-		2)Show
-		3)Write to a File
-		
-		Type 'q' to Quit the Program \n" 
+module Welcome
+	def welcome_message 
+		"Welcome to File Practice."
 	end
 
-	def show
-		menu
+	def exit_message
+		"See you later"
 	end
 end
 
-module Promptable
-	def prompt(message="What would you like to do?", symbol='=> ')
-		print message, symbol 
-		gets.chomp
-	end
-end
-
-#classes
-class List
-	attr_reader :all_tasks
-
-	def initialize
-	 	@all_tasks = []
+module Prompter
+	def prompt(message="What would you like to do?", cursor=">> ")
+		print message, cursor
+		user_input = gets.chomp
 	end
 
-	def add_task(task)
-		all_tasks << task
-		puts "New task '#{task}' added to Todo List."
-		puts task.inspect
+	def show_message
+		puts "Select an option from the menu below:
+		1. Create a new file
+		2. Read contents of file
+		3. Write a new note
+		4. Delete contents of file
+		5. Search
+		6. Rename file
+
+		... press 'q' to exit ... \n"
 	end
-
-	def show_tasks
-		all_tasks
-	end	
-
-	def write_to_file(file_name="file_name.txt")
-		new_file = File.new("file_name.txt", "r+") 
-		new_file.puts all_tasks
-		new_file.close
-	end
-
-
 
 end
 
-class Task
-	attr_reader :description
+$list_of_files = ["testfile.txt"]
 
-  	def initialize(description)
-  		@description = description
-  	end
 
-  	def to_s
-  		description.to_s
-  		#return tasks description as a string
-  	end
+class Doc
+	attr_reader :name
+
+	def initialize(file_name="blank.txt")
+		@file_name = file_name
+		#create new instance of file with name
+	end
+
+	def new_file
+		puts "What would you like to call the new list?"
+		filename = gets.chomp
+			if $list_of_files.include?(filename.downcase)
+				puts "That file already exists."
+			else 
+				f = File.new(filename, "w")
+				f.close
+				$list_of_files << filename
+				puts "New list #{filename} has been created."
+			end
+	end
+
+	def read 
+		#show contents of file
+	end
+
+	def write
+		#append content to file
+	end
+
+	def clear
+		#delete file contents
+	end
+
+	def search
+		#search for keyword
+	end
+
+	def rename
+		#rename file
+	end
+
 
 end
-
 
 if __FILE__ == $PROGRAM_NAME
-	include Menu
-	include Promptable
+	include Welcome
+	include Prompter	
 
-	mylist = List.new
-	puts "Welcome to the Todo List. Please choose from the following list:"
-		until ('q').include?(user_input = prompt(show).downcase)
+	newfile = Doc.new
+	puts welcome_message
+
+		until ('q').include?(user_input = prompt(show_message)) 
 			case user_input
-				when "1"
-					mylist.add_task(Task.new(prompt("What is the task you would like to add to Todo List?\n")))
-				when "2"
-					puts mylist.show_tasks
-				when "3"
-					mylist.write_to_file
-				else 
-					puts "Get it right, choose '1', '2', or '3'."
-			end
-		end
-	puts Menu.outro
-	
-end
 
-	#create a method write_to_file that takes filename as an argument,
-	#and ouputs the alltasks array (descriptions) as a list.
-	#Use an IO class.
+				when "1"
+					newfile.new_file
+				when "2"
+					nil 
+				when "3"
+					nil
+				else 
+					puts "Generic Error Message"
+			end
+		
+	
+		end
+	puts exit_message
+end	
+
+#TO DO
+
+		#   1) create new file
+		# 	2) #read / write 
+		# 	3) #search
+		# 	4) #delete
+		# 	5) #rename
